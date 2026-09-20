@@ -1,0 +1,7 @@
+<Project>
+  <!-- Opt out of any parent repo's central package management: this repo is cloned INSIDE SageFs
+       (see SageFs ci-pipeline.fsx) and must build with its own PackageReference versions. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   ci:
@@ -28,5 +27,3 @@ jobs:
           11.0.x
         dotnet-quality: 'preview'
     - run: dotnet fsi ci-pipeline.fsx
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,25 +5,19 @@
 //
 //   dotnet fsi ci-pipeline.fsx
 //
-// Stages: build -> probe on .NET 10 -> probe on the newest .NET 11 -> pack -> (master push only) publish the
-// package to GitHub Packages. It also runs weekly: a newer .NET 11 RC/GA can change the JIT interface and break
+// Stages: build -> probe on .NET 10 -> probe on the newest .NET 11 -> pack. SageFs consumes this repo by cloning it
+// at a pinned commit and packing it into a local folder feed (its ci-pipeline.fsx), so nothing is published. It also runs weekly: a newer .NET 11 RC/GA can change the JIT interface and break
 // detours, and a red weekly run is the signal to regenerate the layout in the MonoMod fork.
 
 #r "nuget: Fun.Build, 1.2.0"
 
-open System
 open Fun.Build
 
 let probeDll = "build/harmony-probe/bin/Release/net10.0/harmony-probe.dll"
 let nupkgDir = "artifacts/nupkg"
-let feed = "https://nuget.pkg.github.com/WillEhrendreich/index.json"
-
-let onMasterPush =
-  Environment.GetEnvironmentVariable "GITHUB_REF" = "refs/heads/master"
-  && Environment.GetEnvironmentVariable "GITHUB_EVENT_NAME" = "push"
 
 pipeline "sagefs-harmony" {
-  description "Build, prove detours on .NET 10 and 11, pack, publish"
+  description "Build, prove detours on .NET 10 and 11, pack"
 
   stage "build" {
     workingDir __SOURCE_DIRECTORY__
@@ -49,20 +43,6 @@ pipeline "sagefs-harmony" {
   stage "pack" {
     workingDir __SOURCE_DIRECTORY__
     run $"dotnet pack Lib.Harmony/Lib.Harmony.csproj -c Release --no-build -o {nupkgDir}"
-  }
-
-  stage "publish to GitHub Packages" {
-    workingDir __SOURCE_DIRECTORY__
-    run (fun ctx ->
-      async {
-        match onMasterPush with
-        | false ->
-          printfn "not a master push: skipping publish"
-          return Ok()
-        | true ->
-          let token = Environment.GetEnvironmentVariable "GITHUB_TOKEN"
-          return! ctx.RunCommand $"dotnet nuget push \"{nupkgDir}/*.nupkg\" --source {feed} --api-key {token} --skip-duplicate"
-      })
   }
 
   runIfOnlySpecified false
