@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>Lib.Harmony</PackageId>
-    <TargetFrameworks>$(TargetFrameworks);netstandard2.0</TargetFrameworks>
+    <PackageId>SageFs.Harmony</PackageId>
+    <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">

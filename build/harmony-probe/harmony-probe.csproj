@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsLibHarmonyProject>false</IsLibHarmonyProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The freshly built SageFs.Harmony assembly (assembly name 0Harmony). -->
+    <Reference Include="0Harmony">
+      <HintPath>../../Lib.Harmony/bin/Release/net10.0/0Harmony.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
